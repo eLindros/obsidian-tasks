@@ -17,11 +17,8 @@ describe('Query', () => {
                     originalStatusCharacter: ' ',
                     precedingHeader: null,
                     priority: Priority.None,
-                    startDate: null,
-                    scheduledDate: null,
                     dueDate: null,
                     doneDate: null,
-                    recurrence: null,
                     blockLink: '',
                 }),
                 new Task({
@@ -34,11 +31,8 @@ describe('Query', () => {
                     originalStatusCharacter: ' ',
                     precedingHeader: null,
                     priority: Priority.None,
-                    startDate: null,
-                    scheduledDate: null,
                     dueDate: null,
                     doneDate: null,
-                    recurrence: null,
                     blockLink: '',
                 }),
             ];

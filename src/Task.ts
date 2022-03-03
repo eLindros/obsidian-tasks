@@ -358,12 +358,6 @@ export class Task {
 
         let newDoneDate = null;
 
-        let nextOccurrence: {
-            startDate: Moment | null;
-            scheduledDate: Moment | null;
-            dueDate: Moment | null;
-        } | null = null;
-
         if (newStatus !== Status.Todo) {
             newDoneDate = window.moment();
         }
@@ -376,15 +370,6 @@ export class Task {
         });
 
         const newTasks: Task[] = [];
-
-        if (nextOccurrence !== null) {
-            const nextTask = new Task({
-                ...this,
-                // And random block links don't help.
-                blockLink: '',
-            });
-            newTasks.push(nextTask);
-        }
 
         // Write next occurrence before previous occurrence.
         newTasks.push(toggledTask);

@@ -2,8 +2,6 @@ import type { Task } from './Task';
 
 export class Urgency {
     private static readonly dueCoefficient = 12.0;
-    private static readonly scheduledCoefficient = 5.0;
-    private static readonly startedCoefficient = -3.0;
     private static readonly priorityCoefficient = 6.0;
 
     private static readonly milliSecondsPerDay = 1000 * 60 * 60 * 24;
@@ -27,18 +25,6 @@ export class Urgency {
             }
 
             urgency += dueMultiplier * Urgency.dueCoefficient;
-        }
-
-        if (task.scheduledDate !== null) {
-            if (window.moment().isSameOrAfter(task.scheduledDate)) {
-                urgency += 1 * Urgency.scheduledCoefficient;
-            }
-        }
-
-        if (task.startDate !== null) {
-            if (window.moment().isBefore(task.startDate)) {
-                urgency += 1 * Urgency.startedCoefficient;
-            }
         }
 
         switch (task.priority) {

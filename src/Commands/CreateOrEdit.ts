@@ -70,11 +70,8 @@ const taskFromLine = ({ line, path }: { line: string; path: string }): Task => {
             indentation: '',
             originalStatusCharacter: ' ',
             priority: Priority.None,
-            startDate: null,
-            scheduledDate: null,
             dueDate: null,
             doneDate: null,
-            recurrence: null,
             // We don't need the following fields to edit here in the editor.
             sectionStart: 0,
             sectionIndex: 0,
@@ -103,11 +100,8 @@ const taskFromLine = ({ line, path }: { line: string; path: string }): Task => {
         originalStatusCharacter: statusString,
         blockLink,
         priority: Priority.None,
-        startDate: null,
-        scheduledDate: null,
         dueDate: null,
         doneDate: null,
-        recurrence: null,
         // We don't need the following fields to edit here in the editor.
         sectionStart: 0,
         sectionIndex: 0,

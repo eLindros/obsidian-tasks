@@ -37,8 +37,6 @@ export class Sort {
         urgency: Sort.compareByUrgency,
         description: Sort.compareByDescription,
         priority: Sort.compareByPriority,
-        start: Sort.compareByStartDate,
-        scheduled: Sort.compareByScheduledDate,
         due: Sort.compareByDueDate,
         done: Sort.compareByDoneDate,
         path: Sort.compareByPath,
@@ -80,14 +78,6 @@ export class Sort {
 
     private static compareByPriority(a: Task, b: Task): number {
         return a.priority.localeCompare(b.priority);
-    }
-
-    private static compareByStartDate(a: Task, b: Task): -1 | 0 | 1 {
-        return Sort.compareByDate(a.startDate, b.startDate);
-    }
-
-    private static compareByScheduledDate(a: Task, b: Task): -1 | 0 | 1 {
-        return Sort.compareByDate(a.scheduledDate, b.scheduledDate);
     }
 
     private static compareByDueDate(a: Task, b: Task): -1 | 0 | 1 {
