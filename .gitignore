@@ -14,6 +14,7 @@ lefthook.yml
 
 # obsidian
 data.json
+mock_vault
 
 # osx
 .DS_Store
