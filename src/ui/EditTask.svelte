@@ -120,16 +120,22 @@
         <hr />
         <div class="tasks-modal-section">
             <label for="priority">Priority</label>
-            <select
-                bind:value={editableTask.priority}
-                id="priority"
-                class="dropdown"
-            >
-                <option value="none">None</option>
-                <option value="high">!! High</option>
-                <option value="medium">!? Medium</option>
-                <option value="low">?? Low</option>
-            </select>
+            <label>
+                <input type=radio bind:group={editableTask.priority} name="Priority" value={"high"}>
+                !!
+            </label>
+            <label>
+                <input type=radio bind:group={editableTask.priority} name="Priority" value={"medium"}>
+                !?
+            </label>
+            <label>
+                <input type=radio bind:group={editableTask.priority} name="Priority" value={"none"}>
+                -
+            </label>
+            <label>
+                <input type=radio bind:group={editableTask.priority} name="Priority" value={"low"}>
+                ??
+            </label>
         </div>
         <hr />
         <div class="tasks-modal-section">
