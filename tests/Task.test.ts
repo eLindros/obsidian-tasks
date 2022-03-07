@@ -105,7 +105,7 @@ describe('parsing', () => {
 
     it('parses priority correctly', () => {
         // Arrange
-        const line = '- [x] this is a very priority task !!';
+        const line = '- [ ] this is a very priority task !!';
         const path = 'this/is a path/to a/file.md';
         const sectionStart = 1337;
         const sectionIndex = 1209;
