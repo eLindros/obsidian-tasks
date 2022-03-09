@@ -5,5 +5,6 @@ export class LayoutOptions {
     hideDoneDate: boolean = false;
     hideDueDate: boolean = false;
     hideEditButton: boolean = false;
+    hideRule: boolean = false;
     shortMode: boolean = false;
 }

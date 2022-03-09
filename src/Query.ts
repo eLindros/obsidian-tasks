@@ -41,7 +41,7 @@ export class Query {
         /^heading (includes|does not include) (.*)/;
 
     private readonly hideOptionsRegexp =
-        /^hide (task count|backlink|priority|done date|due date|edit button)/;
+        /^hide (task count|backlink|priority|done date|due date|edit button|rule)/;
     private readonly shortModeRegexp = /^short/;
 
     private readonly limitRegexp = /^limit (to )?(\d+)( tasks?)?/;
@@ -156,6 +156,9 @@ export class Query {
                 case 'edit button':
                     this._layoutOptions.hideEditButton = true;
                     break;
+                case 'rule':
+                    this._layoutOptions.hideRule = true;
+                    break;               
                 default:
                     this._error = 'do not understand hide option';
             }
