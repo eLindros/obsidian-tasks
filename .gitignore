@@ -7,7 +7,6 @@ node_modules
 yarn-error.log
 
 # build
-main.js
 *.js.map
 .log
 lefthook.yml
