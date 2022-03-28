@@ -5971,6 +5971,7 @@ var _Task = class {
     originalStatusCharacter,
     precedingHeader,
     priority,
+    sortNumber,
     dueDate,
     doneDate,
     blockLink
@@ -5985,6 +5986,7 @@ var _Task = class {
     this.originalStatusCharacter = originalStatusCharacter;
     this.precedingHeader = precedingHeader;
     this.priority = priority;
+    this.sortNumber = sortNumber;
     this.dueDate = dueDate;
     this.doneDate = doneDate;
     this.blockLink = blockLink;
@@ -6023,6 +6025,7 @@ var _Task = class {
     }
     let matched;
     let priority = Priority.None;
+    let sortNumber = null;
     let dueDate = null;
     let doneDate = null;
     const maxRuns = 7;
@@ -6043,6 +6046,12 @@ var _Task = class {
             break;
         }
         description = description.replace(_Task.priorityRegex, "").trim();
+        matched = true;
+      }
+      const sortNumberMatch = description.match(_Task.sortNumberRegex);
+      if (sortNumberMatch !== null) {
+        sortNumber = parseInt(sortNumberMatch[1].replace("#", ""));
+        description = description.replace(_Task.sortNumberRegex, "").trim();
         matched = true;
       }
       const doneDateMatch = description.match(_Task.doneDateRegex);
@@ -6069,6 +6078,7 @@ var _Task = class {
       originalStatusCharacter: statusString,
       precedingHeader,
       priority,
+      sortNumber,
       dueDate,
       doneDate,
       blockLink
@@ -6147,6 +6157,11 @@ var _Task = class {
         priority = " ??";
       }
       taskString += priority;
+    }
+    let sortNumber = "";
+    if (this.sortNumber !== null) {
+      sortNumber = " #" + this.sortNumber;
+      taskString += sortNumber;
     }
     if (!layoutOptions.hideDueDate && this.dueDate) {
       const dueDate = layoutOptions.shortMode ? " \u{1F4C5}" : ` \u{1F4C5} ${this.dueDate.format(_Task.dateFormat)}`;
@@ -6240,6 +6255,7 @@ var Task = _Task;
 Task.dateFormat = "YYYY-MM-DD";
 Task.taskRegex = /^([\s\t]*)[-*] +\[(.)\] *(.*)/u;
 Task.priorityRegex = /(!!|!\?|\?\?)$/u;
+Task.sortNumberRegex = /(#\d+)$/u;
 Task.dueDateRegex = /[📅📆🗓] ?(\d{4}-\d{2}-\d{2})$/u;
 Task.doneDateRegex = /✅ ?(\d{4}-\d{2}-\d{2})$/u;
 Task.blockLinkRegex = / \^[a-zA-Z0-9-]+$/u;
@@ -6529,6 +6545,9 @@ function attr(node, attribute, value) {
     node.removeAttribute(attribute);
   else if (node.getAttribute(attribute) !== value)
     node.setAttribute(attribute, value);
+}
+function to_number(value) {
+  return value === "" ? null : +value;
 }
 function children(element2) {
   return Array.from(element2.childNodes);
@@ -6828,7 +6847,7 @@ var SvelteComponent = class {
 // src/ui/EditTask.svelte
 var import_chrono_node = __toModule(require_dist());
 function create_fragment(ctx) {
-  let div6;
+  let div7;
   let form;
   let div0;
   let label0;
@@ -6862,26 +6881,31 @@ function create_fragment(ctx) {
   let t13;
   let hr1;
   let t14;
-  let div5;
   let div2;
-  let label6;
-  let t16;
   let input5;
-  let t17;
-  let code;
-  let t18;
-  let html_tag;
-  let t19;
+  let t15;
   let hr2;
-  let t20;
+  let t16;
+  let div6;
   let div3;
+  let label6;
+  let t18;
+  let input6;
+  let t19;
+  let code;
+  let t20;
+  let html_tag;
   let t21;
+  let hr3;
+  let t22;
   let div4;
+  let t23;
+  let div5;
   let mounted;
   let dispose;
   return {
     c() {
-      div6 = element("div");
+      div7 = element("div");
       form = element("form");
       div0 = element("div");
       label0 = element("label");
@@ -6913,23 +6937,28 @@ function create_fragment(ctx) {
       t13 = space();
       hr1 = element("hr");
       t14 = space();
-      div5 = element("div");
       div2 = element("div");
+      input5 = element("input");
+      t15 = space();
+      hr2 = element("hr");
+      t16 = space();
+      div6 = element("div");
+      div3 = element("div");
       label6 = element("label");
       label6.textContent = "Due";
-      t16 = space();
-      input5 = element("input");
-      t17 = space();
-      code = element("code");
-      t18 = text("\u{1F4C5} ");
-      html_tag = new HtmlTag();
+      t18 = space();
+      input6 = element("input");
       t19 = space();
-      hr2 = element("hr");
-      t20 = space();
-      div3 = element("div");
+      code = element("code");
+      t20 = text("\u{1F4C5} ");
+      html_tag = new HtmlTag();
       t21 = space();
+      hr3 = element("hr");
+      t22 = space();
       div4 = element("div");
-      div4.innerHTML = `<button type="submit" class="mod-cta">Apply</button>`;
+      t23 = space();
+      div5 = element("div");
+      div5.innerHTML = `<button type="submit" class="mod-cta">Apply</button>`;
       attr(label0, "for", "description");
       attr(input0, "id", "description");
       attr(input0, "type", "text");
@@ -6958,20 +6987,24 @@ function create_fragment(ctx) {
       input4.value = input4.__value;
       ctx[9][0].push(input4);
       attr(div1, "class", "tasks-modal-section");
+      attr(input5, "type", "number");
+      attr(input5, "min", "0");
+      attr(input5, "max", "100000");
+      attr(div2, "class", "tasks-modal-section");
       attr(label6, "for", "due");
-      attr(input5, "id", "due");
-      attr(input5, "type", "text");
-      attr(input5, "placeholder", "Try 'Monday' or 'tomorrow'.");
+      attr(input6, "id", "due");
+      attr(input6, "type", "text");
+      attr(input6, "placeholder", "Try 'Monday' or 'tomorrow'.");
       html_tag.a = null;
-      attr(div2, "class", "tasks-modal-date");
-      attr(div3, "class", "tasks-modal-section");
+      attr(div3, "class", "tasks-modal-date");
       attr(div4, "class", "tasks-modal-section");
       attr(div5, "class", "tasks-modal-section");
-      attr(div6, "class", "tasks-modal");
+      attr(div6, "class", "tasks-modal-section");
+      attr(div7, "class", "tasks-modal");
     },
     m(target, anchor) {
-      insert(target, div6, anchor);
-      append(div6, form);
+      insert(target, div7, anchor);
+      append(div7, form);
       append(form, div0);
       append(div0, label0);
       append(div0, t1);
@@ -7006,22 +7039,28 @@ function create_fragment(ctx) {
       append(form, t13);
       append(form, hr1);
       append(form, t14);
-      append(form, div5);
-      append(div5, div2);
-      append(div2, label6);
-      append(div2, t16);
+      append(form, div2);
       append(div2, input5);
-      set_input_value(input5, ctx[0].dueDate);
-      append(div2, t17);
-      append(div2, code);
-      append(code, t18);
+      set_input_value(input5, ctx[0].sortNumber);
+      append(form, t15);
+      append(form, hr2);
+      append(form, t16);
+      append(form, div6);
+      append(div6, div3);
+      append(div3, label6);
+      append(div3, t18);
+      append(div3, input6);
+      set_input_value(input6, ctx[0].dueDate);
+      append(div3, t19);
+      append(div3, code);
+      append(code, t20);
       html_tag.m(ctx[2], code);
-      append(div5, t19);
-      append(div5, hr2);
-      append(div5, t20);
-      append(div5, div3);
-      append(div5, t21);
-      append(div5, div4);
+      append(div6, t21);
+      append(div6, hr3);
+      append(div6, t22);
+      append(div6, div4);
+      append(div6, t23);
+      append(div6, div5);
       if (!mounted) {
         dispose = [
           listen(input0, "input", ctx[6]),
@@ -7030,6 +7069,7 @@ function create_fragment(ctx) {
           listen(input3, "change", ctx[11]),
           listen(input4, "change", ctx[12]),
           listen(input5, "input", ctx[13]),
+          listen(input6, "input", ctx[14]),
           listen(form, "submit", prevent_default(ctx[3]))
         ];
         mounted = true;
@@ -7051,8 +7091,11 @@ function create_fragment(ctx) {
       if (dirty & 1) {
         input4.checked = input4.__value === ctx2[0].priority;
       }
-      if (dirty & 1 && input5.value !== ctx2[0].dueDate) {
-        set_input_value(input5, ctx2[0].dueDate);
+      if (dirty & 1 && to_number(input5.value) !== ctx2[0].sortNumber) {
+        set_input_value(input5, ctx2[0].sortNumber);
+      }
+      if (dirty & 1 && input6.value !== ctx2[0].dueDate) {
+        set_input_value(input6, ctx2[0].dueDate);
       }
       if (dirty & 4)
         html_tag.p(ctx2[2]);
@@ -7061,7 +7104,7 @@ function create_fragment(ctx) {
     o: noop,
     d(detaching) {
       if (detaching)
-        detach(div6);
+        detach(div7);
       ctx[7](null);
       ctx[9][0].splice(ctx[9][0].indexOf(input1), 1);
       ctx[9][0].splice(ctx[9][0].indexOf(input2), 1);
@@ -7079,6 +7122,7 @@ function instance($$self, $$props, $$invalidate) {
   let editableTask = {
     description: "",
     priority: "none",
+    sortNumber: 0,
     dueDate: ""
   };
   let parsedDueDate = "";
@@ -7093,9 +7137,14 @@ function instance($$self, $$props, $$invalidate) {
     } else if (task.priority === Priority.High) {
       priority = "high";
     }
+    let sortNumber = 0;
+    if (task.sortNumber !== null) {
+      sortNumber = task.sortNumber;
+    }
     $$invalidate(0, editableTask = {
       description,
       priority,
+      sortNumber,
       dueDate: task.dueDate ? task.dueDate.format("YYYY-MM-DD") : ""
     });
     setTimeout(() => {
@@ -7127,9 +7176,14 @@ function instance($$self, $$props, $$invalidate) {
       default:
         parsedPriority = Priority.None;
     }
+    let sortNumber = null;
+    if (editableTask.sortNumber !== 0) {
+      sortNumber = editableTask.sortNumber;
+    }
     const updatedTask = new Task(Object.assign(Object.assign({}, task), {
       description,
       priority: parsedPriority,
+      sortNumber,
       dueDate
     }));
     onSubmit([updatedTask]);
@@ -7162,6 +7216,10 @@ function instance($$self, $$props, $$invalidate) {
     $$invalidate(0, editableTask);
   }
   function input5_input_handler() {
+    editableTask.sortNumber = to_number(this.value);
+    $$invalidate(0, editableTask);
+  }
+  function input6_input_handler() {
     editableTask.dueDate = this.value;
     $$invalidate(0, editableTask);
   }
@@ -7201,7 +7259,8 @@ function instance($$self, $$props, $$invalidate) {
     input2_change_handler,
     input3_change_handler,
     input4_change_handler,
-    input5_input_handler
+    input5_input_handler,
+    input6_input_handler
   ];
 }
 var EditTask = class extends SvelteComponent {
@@ -7603,7 +7662,7 @@ var Query = class {
     this.doneRegexp = /^done (before|after|on)? ?(.*)/;
     this.pathRegexp = /^path (includes|does not include) (.*)/;
     this.descriptionRegexp = /^description (includes|does not include) (.*)/;
-    this.sortByRegexp = /^sort by (urgency|status|priority|due|done|path|description)( reverse)?/;
+    this.sortByRegexp = /^sort by (urgency|status|priority|manual|due|done|path|description)( reverse)?/;
     this.headingRegexp = /^heading (includes|does not include) (.*)/;
     this.hideOptionsRegexp = /^hide (task count|backlink|priority|done date|due date|edit button)/;
     this.shortModeRegexp = /^short/;
@@ -7864,6 +7923,7 @@ var _Sort = class {
       _Sort.compareByStatus,
       _Sort.compareByDueDate,
       _Sort.compareByPriority,
+      _Sort.compareBySortNumber,
       _Sort.compareByPath
     ];
     const userComparators = [];
@@ -7904,6 +7964,23 @@ var _Sort = class {
   }
   static compareByPriority(a, b) {
     return a.priority.localeCompare(b.priority);
+  }
+  static compareBySortNumber(a, b) {
+    if (a.sortNumber !== null && b.sortNumber === null) {
+      return -1;
+    } else if (a.sortNumber === null && b.sortNumber !== null) {
+      return 1;
+    } else if (a.sortNumber !== null && b.sortNumber !== null) {
+      if (a.sortNumber > b.sortNumber) {
+        return 1;
+      } else if (a.sortNumber < b.sortNumber) {
+        return -1;
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
   }
   static compareByDueDate(a, b) {
     return _Sort.compareByDate(a.dueDate, b.dueDate);
@@ -7969,6 +8046,7 @@ Sort.comparators = {
   urgency: _Sort.compareByUrgency,
   description: _Sort.compareByDescription,
   priority: _Sort.compareByPriority,
+  manual: _Sort.compareBySortNumber,
   due: _Sort.compareByDueDate,
   done: _Sort.compareByDoneDate,
   path: _Sort.compareByPath,

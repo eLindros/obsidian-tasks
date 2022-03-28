@@ -13,6 +13,7 @@ export class Sort {
             Sort.compareByStatus,
             Sort.compareByDueDate,
             Sort.compareByPriority,
+            Sort.compareBySortNumber,
             Sort.compareByPath,
         ];
 
@@ -37,6 +38,7 @@ export class Sort {
         urgency: Sort.compareByUrgency,
         description: Sort.compareByDescription,
         priority: Sort.compareByPriority,
+        manual: Sort.compareBySortNumber,
         due: Sort.compareByDueDate,
         done: Sort.compareByDoneDate,
         path: Sort.compareByPath,
@@ -78,6 +80,24 @@ export class Sort {
 
     private static compareByPriority(a: Task, b: Task): number {
         return a.priority.localeCompare(b.priority);
+    }
+
+    private static compareBySortNumber(a: Task, b: Task): -1 | 0 | 1 {
+        if (a.sortNumber !== null && b.sortNumber === null) {
+            return -1;
+        } else if (a.sortNumber === null && b.sortNumber !== null) {
+            return 1;
+        } else if (a.sortNumber !== null && b.sortNumber !== null) {
+            if (a.sortNumber > b.sortNumber) {
+                return 1;
+            } else if (a.sortNumber < b.sortNumber) {
+                return -1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 
     private static compareByDueDate(a: Task, b: Task): -1 | 0 | 1 {

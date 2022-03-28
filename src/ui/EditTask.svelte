@@ -1,20 +1,29 @@
 <script lang="ts">
     import chrono from 'chrono-node';
-    import { onMount } from 'svelte';
-    import { getSettings } from '../Settings';
-    import { Priority, Task } from '../Task';
+    import {
+        onMount
+    } from 'svelte';
+    import {
+        getSettings
+    } from '../Settings';
+    import {
+        Priority,
+        Task
+    } from '../Task';
 
     export let task: Task;
-    export let onSubmit: (updatedTasks: Task[]) => void | Promise<void>;
+    export let onSubmit: (updatedTasks: Task[]) => void | Promise < void > ;
 
     let descriptionInput: HTMLInputElement;
     let editableTask: {
         description: string;
         priority: 'none' | 'low' | 'medium' | 'high';
+        sortNumber: number;
         dueDate: string;
     } = {
         description: '',
         priority: 'none',
+        sortNumber: 0,
         dueDate: '',
     };
 
@@ -36,7 +45,9 @@
     }
 
     onMount(() => {
-        const { globalFilter } = getSettings();
+        const {
+            globalFilter
+        } = getSettings();
         const description = task.description
             .replace(globalFilter, '')
             .replace('  ', ' ')
@@ -51,9 +62,15 @@
             priority = 'high';
         }
 
+        let sortNumber: number = 0;
+        if (task.sortNumber !== null) {
+            sortNumber = task.sortNumber;
+        }
+
         editableTask = {
             description,
             priority,
+            sortNumber,
             dueDate: task.dueDate ? task.dueDate.format('YYYY-MM-DD') : ''
         };
         setTimeout(() => {
@@ -62,7 +79,9 @@
     });
 
     const _onSubmit = () => {
-        const { globalFilter } = getSettings();
+        const {
+            globalFilter
+        } = getSettings();
         let description = editableTask.description.trim();
         if (!description.includes(globalFilter)) {
             description = globalFilter + ' ' + description;
@@ -71,8 +90,9 @@
         let dueDate: moment.Moment | null = null;
         const parsedDueDate = chrono.parseDate(
             editableTask.dueDate,
-            new Date(),
-            { forwardDate: true },
+            new Date(), {
+                forwardDate: true
+            },
         );
         if (parsedDueDate !== null) {
             dueDate = window.moment(parsedDueDate);
@@ -93,10 +113,17 @@
                 parsedPriority = Priority.None;
         }
 
+        let sortNumber: number | null = null;
+        if (editableTask.sortNumber !== 0) {
+            sortNumber = editableTask.sortNumber;
+        }
+
+
         const updatedTask = new Task({
             ...task,
             description,
             priority: parsedPriority,
+            sortNumber,
             dueDate,
         });
 
@@ -108,14 +135,8 @@
     <form on:submit|preventDefault={_onSubmit}>
         <div class="tasks-modal-section">
             <label for="description">Description</label>
-            <input
-                bind:value={editableTask.description}
-                bind:this={descriptionInput}
-                id="description"
-                type="text"
-                class="tasks-modal-description"
-                placeholder="Take out the trash"
-            />
+            <input bind:value={editableTask.description} bind:this={descriptionInput} id="description" type="text"
+                class="tasks-modal-description" placeholder="Take out the trash" />
         </div>
         <hr />
         <div class="tasks-modal-section">
@@ -139,20 +160,20 @@
         </div>
         <hr />
         <div class="tasks-modal-section">
+            <input type=number bind:value={editableTask.sortNumber} min=0 max=100000>
+        </div>
+        <hr />
+        <div class="tasks-modal-section">
             <div class="tasks-modal-date">
                 <label for="due">Due</label>
-                <input
-                    bind:value={editableTask.dueDate}
-                    id="due"
-                    type="text"
-                    placeholder="Try 'Monday' or 'tomorrow'."
-                />
+                <input bind:value={editableTask.dueDate} id="due" type="text"
+                    placeholder="Try 'Monday' or 'tomorrow'." />
                 <code>📅 {@html parsedDueDate}</code>
             </div>
-        <hr />
-        <div class="tasks-modal-section" />
-        <div class="tasks-modal-section">
-            <button type="submit" class="mod-cta">Apply</button>
-        </div>
+            <hr />
+            <div class="tasks-modal-section" />
+            <div class="tasks-modal-section">
+                <button type="submit" class="mod-cta">Apply</button>
+            </div>
     </form>
 </div>

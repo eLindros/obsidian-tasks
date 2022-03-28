@@ -36,7 +36,7 @@ export class Task {
     public readonly precedingHeader: string | null;
 
     public readonly priority: Priority;
-    public readonly sortNumber: Number;
+    public readonly sortNumber: number | null;
 
     public readonly dueDate: Moment | null;
     public readonly doneDate: Moment | null;
@@ -49,7 +49,7 @@ export class Task {
     // The following regexes end with `$` because they will be matched and
     // removed from the end until none are left.
     public static readonly priorityRegex = /(!!|!\?|\?\?)$/u;
-    public static readonly sortNumberRegex = /\#[0-9]*/u;
+    public static readonly sortNumberRegex = /(#\d+)$/u;
     public static readonly dueDateRegex = /[📅📆🗓] ?(\d{4}-\d{2}-\d{2})$/u;
     public static readonly doneDateRegex = /✅ ?(\d{4}-\d{2}-\d{2})$/u;
     public static readonly blockLinkRegex = / \^[a-zA-Z0-9-]+$/u;
@@ -80,7 +80,7 @@ export class Task {
         originalStatusCharacter: string;
         precedingHeader: string | null;
         priority: Priority;
-        sortNumber: number;
+        sortNumber: number | null;
         dueDate: moment.Moment | null;
         doneDate: moment.Moment | null;
         blockLink: string;
@@ -155,6 +155,7 @@ export class Task {
         // strings are in the expected order after the description.
         let matched: boolean;
         let priority: Priority = Priority.None;
+        let sortNumber: number | null = null;
         let dueDate: Moment | null = null;
         let doneDate: Moment | null = null;
         // Add a "max runs" failsafe to never end in an endless loop:
@@ -178,6 +179,15 @@ export class Task {
 
                 description = description
                     .replace(Task.priorityRegex, '')
+                    .trim();
+                matched = true;
+            }
+
+            const sortNumberMatch = description.match(Task.sortNumberRegex);
+            if (sortNumberMatch !== null) {
+                sortNumber = parseInt(sortNumberMatch[1].replace('#', ''));
+                description = description
+                    .replace(Task.sortNumberRegex, '')
                     .trim();
                 matched = true;
             }
@@ -322,6 +332,12 @@ export class Task {
             }
 
             taskString += priority;
+        }
+
+        let sortNumber: string = '';
+        if (this.sortNumber !== null) {
+            sortNumber = ' #' + this.sortNumber;
+            taskString += sortNumber;
         }
 
         if (!layoutOptions.hideDueDate && this.dueDate) {
