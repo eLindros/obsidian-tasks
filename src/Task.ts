@@ -49,7 +49,7 @@ export class Task {
     // The following regexes end with `$` because they will be matched and
     // removed from the end until none are left.
     public static readonly priorityRegex = /(!!|!\?|\?\?)$/u;
-    public static readonly priorityRegex = /\#[0-9]*/u;
+    public static readonly sortNumberRegex = /\#[0-9]*/u;
     public static readonly dueDateRegex = /[📅📆🗓] ?(\d{4}-\d{2}-\d{2})$/u;
     public static readonly doneDateRegex = /✅ ?(\d{4}-\d{2}-\d{2})$/u;
     public static readonly blockLinkRegex = / \^[a-zA-Z0-9-]+$/u;
@@ -95,6 +95,7 @@ export class Task {
         this.precedingHeader = precedingHeader;
 
         this.priority = priority;
+        this.sortNumber = sortNumber;
 
         this.dueDate = dueDate;
         this.doneDate = doneDate;
@@ -210,6 +211,7 @@ export class Task {
             originalStatusCharacter: statusString,
             precedingHeader,
             priority,
+            sortNumber,
             dueDate,
             doneDate,
             blockLink,
