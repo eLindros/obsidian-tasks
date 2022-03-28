@@ -36,6 +36,7 @@ export class Task {
     public readonly precedingHeader: string | null;
 
     public readonly priority: Priority;
+    public readonly sortNumber: Number;
 
     public readonly dueDate: Moment | null;
     public readonly doneDate: Moment | null;
@@ -48,6 +49,7 @@ export class Task {
     // The following regexes end with `$` because they will be matched and
     // removed from the end until none are left.
     public static readonly priorityRegex = /(!!|!\?|\?\?)$/u;
+    public static readonly priorityRegex = /\#[0-9]*/u;
     public static readonly dueDateRegex = /[📅📆🗓] ?(\d{4}-\d{2}-\d{2})$/u;
     public static readonly doneDateRegex = /✅ ?(\d{4}-\d{2}-\d{2})$/u;
     public static readonly blockLinkRegex = / \^[a-zA-Z0-9-]+$/u;
@@ -64,6 +66,7 @@ export class Task {
         originalStatusCharacter,
         precedingHeader,
         priority,
+        sortNumber,
         dueDate,
         doneDate,
         blockLink,
@@ -77,6 +80,7 @@ export class Task {
         originalStatusCharacter: string;
         precedingHeader: string | null;
         priority: Priority;
+        sortNumber: number;
         dueDate: moment.Moment | null;
         doneDate: moment.Moment | null;
         blockLink: string;
