@@ -222,6 +222,26 @@ class QueryRenderChild extends MarkdownRenderChild {
         });
     }
 
+    private addIncreaseSortNumberButton(postInfo: HTMLSpanElement, task: Task) {
+        const increaseSortNumber = postInfo.createEl('a', {
+            cls: 'tasks-edit',
+        });
+
+
+        increaseSortNumber.onClickEvent((event: MouseEvent) => {
+            event.preventDefault();
+
+                updatedTasks = [task]
+
+                replaceTaskWithTasks({
+                    originalTask: task,
+                    newTasks: updatedTasks,
+                });
+
+    }
+ } 
+
+
     private addBacklinks(
         postInfo: HTMLSpanElement,
         task: Task,
