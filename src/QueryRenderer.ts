@@ -12,7 +12,7 @@ import { Query } from './Query';
 import { Sort } from './Sort';
 import { TaskModal } from './TaskModal';
 import type { Events } from './Events';
-import type { Task } from './Task';
+import { Task } from './Task';
 
 export class QueryRenderer {
     private readonly app: App;
