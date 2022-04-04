@@ -8158,11 +8158,11 @@ var QueryRenderChild = class extends import_obsidian7.MarkdownRenderChild {
         const footnotes = listItem.querySelectorAll("[data-footnote-id]");
         footnotes.forEach((footnote) => footnote.remove());
         const postInfo = listItem.createSpan();
+        this.addChangeSortNumberButton(postInfo, task);
+        this.addChangeSortNumberButton(postInfo, task, false);
         if (!this.query.layoutOptions.hideBacklinks && task.filename !== void 0) {
           this.addBacklinks(postInfo, task, this.query.layoutOptions.shortMode);
         }
-        this.addChangeSortNumberButton(postInfo, task);
-        this.addChangeSortNumberButton(postInfo, task, false);
         if (!this.query.layoutOptions.hideEditButton) {
           this.addEditButton(postInfo, task);
         }
@@ -8192,7 +8192,8 @@ var QueryRenderChild = class extends import_obsidian7.MarkdownRenderChild {
     });
   }
   addChangeSortNumberButton(postInfo, task, increase = true) {
-    const increaseSortNumber = postInfo.createEl("a", increase ? "+" : "-");
+    let increaseSortNumber = postInfo.createEl("a");
+    increaseSortNumber.setText(increase ? "+" : "-");
     increaseSortNumber.onClickEvent((event) => {
       event.preventDefault();
       let newSortNumber = task.sortNumber === null ? 0 : task.sortNumber;
