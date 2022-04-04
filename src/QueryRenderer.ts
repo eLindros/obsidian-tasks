@@ -177,9 +177,6 @@ class QueryRenderChild extends MarkdownRenderChild {
 
             const postInfo = listItem.createSpan();
 
-            this.addChangeSortNumberButton(postInfo, task);
-            this.addChangeSortNumberButton(postInfo, task, false);
-
             if (
                 !this.query.layoutOptions.hideBacklinks &&
                 task.filename !== undefined
@@ -194,6 +191,10 @@ class QueryRenderChild extends MarkdownRenderChild {
             if (!this.query.layoutOptions.hideEditButton) {
                 this.addEditButton(postInfo, task);
             }
+
+            this.addChangeSortNumberButton(postInfo, task);
+            this.addChangeSortNumberButton(postInfo, task, false);
+
 
             taskList.appendChild(listItem);
         }
@@ -228,7 +229,7 @@ class QueryRenderChild extends MarkdownRenderChild {
     private addChangeSortNumberButton(postInfo: HTMLSpanElement, task: Task, increase: Boolean = true) {
         let increaseSortNumber = postInfo.createEl('a');
         
-        increaseSortNumber.setText(increase ? '+' : '-');
+        increaseSortNumber.setText(increase ? '🔼' : '🔽');
 
         increaseSortNumber.onClickEvent((event: MouseEvent) => {
             event.preventDefault();
