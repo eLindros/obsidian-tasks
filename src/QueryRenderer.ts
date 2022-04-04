@@ -188,6 +188,9 @@ class QueryRenderChild extends MarkdownRenderChild {
                 );
             }
 
+            this.addChangeSortNumberButton(postInfo, task);
+            this.addChangeSortNumberButton(postInfo, task, false);
+
             if (!this.query.layoutOptions.hideEditButton) {
                 this.addEditButton(postInfo, task);
             }
@@ -222,24 +225,30 @@ class QueryRenderChild extends MarkdownRenderChild {
         });
     }
 
-    private addIncreaseSortNumberButton(postInfo: HTMLSpanElement, task: Task) {
-        const increaseSortNumber = postInfo.createEl('a', {
-            cls: 'tasks-edit',
-        });
-
+    private addChangeSortNumberButton(postInfo: HTMLSpanElement, task: Task, increase: Boolean = true) {
+        const increaseSortNumber = postInfo.createEl('a', increase ? '+' : '-');
 
         increaseSortNumber.onClickEvent((event: MouseEvent) => {
             event.preventDefault();
 
-                updatedTasks = [task]
+            let newSortNumber = task.sortNumber === null ? 0 : task.sortNumber;
+            
+            newSortNumber =  increase ? newSortNumber + 1 : newSortNumber - 1;
+            
+            newSortNumber = newSortNumber < 0 ? 0 : newSortNumber;
 
-                replaceTaskWithTasks({
-                    originalTask: task,
-                    newTasks: updatedTasks,
-                });
+            const updatedTask = new Task({
+                ...task,
+                sortNumber: newSortNumber,
+            });
 
+            replaceTaskWithTasks({
+                originalTask: task,
+                newTasks: [updatedTask],
+            });
+
+        });
     }
- } 
 
 
     private addBacklinks(
