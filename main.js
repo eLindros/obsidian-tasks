@@ -8161,6 +8161,8 @@ var QueryRenderChild = class extends import_obsidian7.MarkdownRenderChild {
         if (!this.query.layoutOptions.hideBacklinks && task.filename !== void 0) {
           this.addBacklinks(postInfo, task, this.query.layoutOptions.shortMode);
         }
+        this.addChangeSortNumberButton(postInfo, task);
+        this.addChangeSortNumberButton(postInfo, task, false);
         if (!this.query.layoutOptions.hideEditButton) {
           this.addEditButton(postInfo, task);
         }
@@ -8187,6 +8189,22 @@ var QueryRenderChild = class extends import_obsidian7.MarkdownRenderChild {
         onSubmit
       });
       taskModal.open();
+    });
+  }
+  addChangeSortNumberButton(postInfo, task, increase = true) {
+    const increaseSortNumber = postInfo.createEl("a", increase ? "+" : "-");
+    increaseSortNumber.onClickEvent((event) => {
+      event.preventDefault();
+      let newSortNumber = task.sortNumber === null ? 0 : task.sortNumber;
+      newSortNumber = increase ? newSortNumber + 1 : newSortNumber - 1;
+      newSortNumber = newSortNumber < 0 ? 0 : newSortNumber;
+      const updatedTask = new Task(__spreadProps(__spreadValues({}, task), {
+        sortNumber: newSortNumber
+      }));
+      replaceTaskWithTasks({
+        originalTask: task,
+        newTasks: [updatedTask]
+      });
     });
   }
   addBacklinks(postInfo, task, shortMode) {

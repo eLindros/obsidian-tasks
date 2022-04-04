@@ -226,7 +226,9 @@ class QueryRenderChild extends MarkdownRenderChild {
     }
 
     private addChangeSortNumberButton(postInfo: HTMLSpanElement, task: Task, increase: Boolean = true) {
-        const increaseSortNumber = postInfo.createEl('a', increase ? '+' : '-');
+        let increaseSortNumber = postInfo.createEl('a');
+        
+        increaseSortNumber.setText(increase ? '+' : '-');
 
         increaseSortNumber.onClickEvent((event: MouseEvent) => {
             event.preventDefault();
