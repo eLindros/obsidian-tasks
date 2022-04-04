@@ -89,9 +89,9 @@ export class Sort {
             return 1;
         } else if (a.sortNumber !== null && b.sortNumber !== null) {
             if (a.sortNumber > b.sortNumber) {
-                return 1;
-            } else if (a.sortNumber < b.sortNumber) {
                 return -1;
+            } else if (a.sortNumber < b.sortNumber) {
+                return 1;
             } else {
                 return 0;
             }
