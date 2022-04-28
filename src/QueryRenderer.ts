@@ -191,6 +191,8 @@ class QueryRenderChild extends MarkdownRenderChild {
             if (!this.query.layoutOptions.hideEditButton) {
                 this.addEditButton(postInfo, task);
             }
+            this.addChangePriorityButton(postInfo, task);
+            this.addChangePriorityButton(postInfo, task, false);
 
             taskList.appendChild(listItem);
         }
@@ -221,6 +223,49 @@ class QueryRenderChild extends MarkdownRenderChild {
             taskModal.open();
         });
     }
+
+    private addChangePriorityButton(postInfo: HTMLSpanElement, task: Task, increase: Boolean = true) {
+        let changePriority = postInfo.createEl('a');
+        
+        changePriority.setText(increase ? '🔼' : '🔽');
+
+        changePriority.onClickEvent((event: MouseEvent) => {
+            event.preventDefault();
+
+        let newPriority = task.priority;
+            
+        let parsedPriority: Priority;
+        switch (editableTask.priority) {
+            case 'low':
+                parsedPriority = Priority.Low;
+                break;
+            case 'medium':
+                parsedPriority = Priority.Medium;
+                break;
+            case 'high':
+                parsedPriority = Priority.High;
+                break;
+            default:
+                parsedPriority = Priority.None;
+        }
+            
+            newPriority =  increase ? newPriority - 1 : newPriority - 1;
+            
+            newPriority = newPriority < 0 ? 0 : newPriority;
+
+            const updatedTask = new Task({
+                ...task,
+                sortNumber: newPriority,
+            });
+
+            replaceTaskWithTasks({
+                originalTask: task,
+                newTasks: [updatedTask],
+            });
+
+        });
+    }
+
 
     private addBacklinks(
         postInfo: HTMLSpanElement,
