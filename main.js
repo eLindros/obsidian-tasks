@@ -8086,6 +8086,8 @@ var QueryRenderChild = class extends import_obsidian7.MarkdownRenderChild {
         if (!this.query.layoutOptions.hideEditButton) {
           this.addEditButton(postInfo, task);
         }
+        this.addChangePriorityButton(postInfo, task);
+        this.addChangePriorityButton(postInfo, task, false);
         taskList.appendChild(listItem);
       }
       return { taskList, tasksCount };
@@ -8109,6 +8111,37 @@ var QueryRenderChild = class extends import_obsidian7.MarkdownRenderChild {
         onSubmit
       });
       taskModal.open();
+    });
+  }
+  addChangePriorityButton(postInfo, task, increase = true) {
+    const changePriority = postInfo.createEl("a");
+    changePriority.setText(increase ? "\u{1F53C}" : "\u{1F53D}");
+    changePriority.onClickEvent((event) => {
+      event.preventDefault();
+      let parsedPriority;
+      switch (task.priority) {
+        case "1":
+          parsedPriority = increase ? Priority.High : Priority.Medium;
+          break;
+        case "2":
+          parsedPriority = increase ? Priority.High : Priority.None;
+          break;
+        case "3":
+          parsedPriority = increase ? Priority.Medium : Priority.Low;
+          break;
+        case "4":
+          parsedPriority = increase ? Priority.None : Priority.Low;
+          break;
+        default:
+          parsedPriority = Priority.None;
+      }
+      const updatedTask = new Task(__spreadProps(__spreadValues({}, task), {
+        priority: parsedPriority
+      }));
+      replaceTaskWithTasks({
+        originalTask: task,
+        newTasks: [updatedTask]
+      });
     });
   }
   addBacklinks(postInfo, task, shortMode) {

@@ -12,7 +12,7 @@ import { Query } from './Query';
 import { Sort } from './Sort';
 import { TaskModal } from './TaskModal';
 import type { Events } from './Events';
-import type { Task } from './Task';
+import { Priority, Task } from './Task';
 
 export class QueryRenderer {
     private readonly app: App;
@@ -224,48 +224,48 @@ class QueryRenderChild extends MarkdownRenderChild {
         });
     }
 
-    private addChangePriorityButton(postInfo: HTMLSpanElement, task: Task, increase: Boolean = true) {
-        let changePriority = postInfo.createEl('a');
-        
+    private addChangePriorityButton(
+        postInfo: HTMLSpanElement,
+        task: Task,
+        increase: Boolean = true,
+    ) {
+        const changePriority = postInfo.createEl('a');
+
         changePriority.setText(increase ? '🔼' : '🔽');
 
         changePriority.onClickEvent((event: MouseEvent) => {
             event.preventDefault();
 
-        let newPriority = task.priority;
-            
-        let parsedPriority: Priority;
-        switch (editableTask.priority) {
-            case 'low':
-                parsedPriority = Priority.Low;
-                break;
-            case 'medium':
-                parsedPriority = Priority.Medium;
-                break;
-            case 'high':
-                parsedPriority = Priority.High;
-                break;
-            default:
-                parsedPriority = Priority.None;
-        }
-            
-            newPriority =  increase ? newPriority - 1 : newPriority - 1;
-            
-            newPriority = newPriority < 0 ? 0 : newPriority;
+            let parsedPriority: Priority;
+
+            switch (task.priority) {
+                case '1':
+                    parsedPriority = increase ? Priority.High : Priority.Medium;
+                    break;
+                case '2':
+                    parsedPriority = increase ? Priority.High : Priority.None;
+                    break;
+                case '3':
+                    parsedPriority = increase ? Priority.Medium : Priority.Low;
+                    break;
+                case '4':
+                    parsedPriority = increase ? Priority.None : Priority.Low;
+                    break;
+                default:
+                    parsedPriority = Priority.None;
+            }
 
             const updatedTask = new Task({
                 ...task,
-                sortNumber: newPriority,
+                priority: parsedPriority,
             });
 
             replaceTaskWithTasks({
                 originalTask: task,
                 newTasks: [updatedTask],
             });
-
         });
     }
-
 
     private addBacklinks(
         postInfo: HTMLSpanElement,
