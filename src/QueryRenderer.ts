@@ -194,6 +194,8 @@ class QueryRenderChild extends MarkdownRenderChild {
             this.addChangePriorityButton(postInfo, task);
             this.addChangePriorityButton(postInfo, task, false);
 
+            this.addChangeWaitingButton(postInfo, task);
+
             taskList.appendChild(listItem);
         }
 
@@ -254,6 +256,31 @@ class QueryRenderChild extends MarkdownRenderChild {
                 default:
                     parsedPriority = Priority.None;
             }
+
+            const updatedTask = new Task({
+                ...task,
+                priority: parsedPriority,
+            });
+
+            replaceTaskWithTasks({
+                originalTask: task,
+                newTasks: [updatedTask],
+            });
+        });
+    }
+    
+    private addChangeWaitingButton(
+        postInfo: HTMLSpanElement,
+        task: Task,
+    ) {
+        const changePriority = postInfo.createEl('a');
+
+        changePriority.setText('▶️');
+
+        changePriority.onClickEvent((event: MouseEvent) => {
+            event.preventDefault();
+
+            let parsedPriority: Priority = task.priority = '5' ? '1' : '5';
 
             const updatedTask = new Task({
                 ...task,
