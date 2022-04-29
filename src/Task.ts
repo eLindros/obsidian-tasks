@@ -17,6 +17,7 @@ export enum Priority {
     Medium = '2',
     None = '3',
     Low = '4',
+    Waiting = '5',
 }
 
 export class Task {
@@ -47,7 +48,7 @@ export class Task {
     public static readonly taskRegex = /^([\s\t]*)[-*] +\[(.)\] *(.*)/u;
     // The following regexes end with `$` because they will be matched and
     // removed from the end until none are left.
-    public static readonly priorityRegex = /(!!|!\?|\?\?)$/u;
+    public static readonly priorityRegex = /(!!|!\?|\?\?|>>)$/u;
     public static readonly dueDateRegex = /[📅📆🗓] ?(\d{4}-\d{2}-\d{2})$/u;
     public static readonly doneDateRegex = /✅ ?(\d{4}-\d{2}-\d{2})$/u;
     public static readonly blockLinkRegex = / \^[a-zA-Z0-9-]+$/u;
@@ -168,6 +169,9 @@ export class Task {
                         break;
                     case '!!':
                         priority = Priority.High;
+                        break;
+                    case '>>':
+                        priority = Priority.Waiting;
                         break;
                 }
 
@@ -313,6 +317,8 @@ export class Task {
                 priority = ' !?';
             } else if (this.priority === Priority.Low) {
                 priority = ' ??';
+            } else if (this.priority === Priority.Waiting) {
+                priority = ' >>';
             }
 
             taskString += priority;

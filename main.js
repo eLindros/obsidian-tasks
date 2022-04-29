@@ -5959,6 +5959,7 @@ var Priority;
   Priority2["Medium"] = "2";
   Priority2["None"] = "3";
   Priority2["Low"] = "4";
+  Priority2["Waiting"] = "5";
 })(Priority || (Priority = {}));
 var _Task = class {
   constructor({
@@ -6040,6 +6041,9 @@ var _Task = class {
             break;
           case "!!":
             priority = Priority.High;
+            break;
+          case ">>":
+            priority = Priority.Waiting;
             break;
         }
         description = description.replace(_Task.priorityRegex, "").trim();
@@ -6145,6 +6149,8 @@ var _Task = class {
         priority = " !?";
       } else if (this.priority === Priority.Low) {
         priority = " ??";
+      } else if (this.priority === Priority.Waiting) {
+        priority = " >>";
       }
       taskString += priority;
     }
@@ -6239,7 +6245,7 @@ var _Task = class {
 var Task = _Task;
 Task.dateFormat = "YYYY-MM-DD";
 Task.taskRegex = /^([\s\t]*)[-*] +\[(.)\] *(.*)/u;
-Task.priorityRegex = /(!!|!\?|\?\?)$/u;
+Task.priorityRegex = /(!!|!\?|\?\?|>>)$/u;
 Task.dueDateRegex = /[📅📆🗓] ?(\d{4}-\d{2}-\d{2})$/u;
 Task.doneDateRegex = /✅ ?(\d{4}-\d{2}-\d{2})$/u;
 Task.blockLinkRegex = / \^[a-zA-Z0-9-]+$/u;
@@ -6860,22 +6866,27 @@ function create_fragment(ctx) {
   let input4_value_value;
   let t12;
   let t13;
-  let hr1;
+  let label6;
+  let input5;
+  let input5_value_value;
   let t14;
+  let t15;
+  let hr1;
+  let t16;
   let div5;
   let div2;
-  let label6;
-  let t16;
-  let input5;
-  let t17;
-  let code;
+  let label7;
   let t18;
-  let html_tag;
+  let input6;
   let t19;
-  let hr2;
+  let code;
   let t20;
-  let div3;
+  let html_tag;
   let t21;
+  let hr2;
+  let t22;
+  let div3;
+  let t23;
   let div4;
   let mounted;
   let dispose;
@@ -6911,23 +6922,27 @@ function create_fragment(ctx) {
       input4 = element("input");
       t12 = text("\n                ??");
       t13 = space();
+      label6 = element("label");
+      input5 = element("input");
+      t14 = text("\n                >>");
+      t15 = space();
       hr1 = element("hr");
-      t14 = space();
+      t16 = space();
       div5 = element("div");
       div2 = element("div");
-      label6 = element("label");
-      label6.textContent = "Due";
-      t16 = space();
-      input5 = element("input");
-      t17 = space();
-      code = element("code");
-      t18 = text("\u{1F4C5} ");
-      html_tag = new HtmlTag();
+      label7 = element("label");
+      label7.textContent = "Due";
+      t18 = space();
+      input6 = element("input");
       t19 = space();
-      hr2 = element("hr");
-      t20 = space();
-      div3 = element("div");
+      code = element("code");
+      t20 = text("\u{1F4C5} ");
+      html_tag = new HtmlTag();
       t21 = space();
+      hr2 = element("hr");
+      t22 = space();
+      div3 = element("div");
+      t23 = space();
       div4 = element("div");
       div4.innerHTML = `<button type="submit" class="mod-cta">Apply</button>`;
       attr(label0, "for", "description");
@@ -6957,11 +6972,16 @@ function create_fragment(ctx) {
       input4.__value = input4_value_value = "low";
       input4.value = input4.__value;
       ctx[9][0].push(input4);
+      attr(input5, "type", "radio");
+      attr(input5, "name", "Priority");
+      input5.__value = input5_value_value = "waiting";
+      input5.value = input5.__value;
+      ctx[9][0].push(input5);
       attr(div1, "class", "tasks-modal-section");
-      attr(label6, "for", "due");
-      attr(input5, "id", "due");
-      attr(input5, "type", "text");
-      attr(input5, "placeholder", "Try 'Monday' or 'tomorrow'.");
+      attr(label7, "for", "due");
+      attr(input6, "id", "due");
+      attr(input6, "type", "text");
+      attr(input6, "placeholder", "Try 'Monday' or 'tomorrow'.");
       html_tag.a = null;
       attr(div2, "class", "tasks-modal-date");
       attr(div3, "class", "tasks-modal-section");
@@ -7003,24 +7023,29 @@ function create_fragment(ctx) {
       append(label5, input4);
       input4.checked = input4.__value === ctx[0].priority;
       append(label5, t12);
-      append(form, t13);
+      append(div1, t13);
+      append(div1, label6);
+      append(label6, input5);
+      input5.checked = input5.__value === ctx[0].priority;
+      append(label6, t14);
+      append(form, t15);
       append(form, hr1);
-      append(form, t14);
+      append(form, t16);
       append(form, div5);
       append(div5, div2);
-      append(div2, label6);
-      append(div2, t16);
-      append(div2, input5);
-      set_input_value(input5, ctx[0].dueDate);
-      append(div2, t17);
+      append(div2, label7);
+      append(div2, t18);
+      append(div2, input6);
+      set_input_value(input6, ctx[0].dueDate);
+      append(div2, t19);
       append(div2, code);
-      append(code, t18);
+      append(code, t20);
       html_tag.m(ctx[2], code);
-      append(div5, t19);
-      append(div5, hr2);
-      append(div5, t20);
-      append(div5, div3);
       append(div5, t21);
+      append(div5, hr2);
+      append(div5, t22);
+      append(div5, div3);
+      append(div5, t23);
       append(div5, div4);
       if (!mounted) {
         dispose = [
@@ -7029,7 +7054,8 @@ function create_fragment(ctx) {
           listen(input2, "change", ctx[10]),
           listen(input3, "change", ctx[11]),
           listen(input4, "change", ctx[12]),
-          listen(input5, "input", ctx[13]),
+          listen(input5, "change", ctx[13]),
+          listen(input6, "input", ctx[14]),
           listen(form, "submit", prevent_default(ctx[3]))
         ];
         mounted = true;
@@ -7051,8 +7077,11 @@ function create_fragment(ctx) {
       if (dirty & 1) {
         input4.checked = input4.__value === ctx2[0].priority;
       }
-      if (dirty & 1 && input5.value !== ctx2[0].dueDate) {
-        set_input_value(input5, ctx2[0].dueDate);
+      if (dirty & 1) {
+        input5.checked = input5.__value === ctx2[0].priority;
+      }
+      if (dirty & 1 && input6.value !== ctx2[0].dueDate) {
+        set_input_value(input6, ctx2[0].dueDate);
       }
       if (dirty & 4)
         html_tag.p(ctx2[2]);
@@ -7067,6 +7096,7 @@ function create_fragment(ctx) {
       ctx[9][0].splice(ctx[9][0].indexOf(input2), 1);
       ctx[9][0].splice(ctx[9][0].indexOf(input3), 1);
       ctx[9][0].splice(ctx[9][0].indexOf(input4), 1);
+      ctx[9][0].splice(ctx[9][0].indexOf(input5), 1);
       mounted = false;
       run_all(dispose);
     }
@@ -7092,6 +7122,8 @@ function instance($$self, $$props, $$invalidate) {
       priority = "medium";
     } else if (task.priority === Priority.High) {
       priority = "high";
+    } else if (task.priority === Priority.Waiting) {
+      priority = "waiting";
     }
     $$invalidate(0, editableTask = {
       description,
@@ -7123,6 +7155,9 @@ function instance($$self, $$props, $$invalidate) {
         break;
       case "high":
         parsedPriority = Priority.High;
+        break;
+      case "waiting":
+        parsedPriority = Priority.Waiting;
         break;
       default:
         parsedPriority = Priority.None;
@@ -7161,7 +7196,11 @@ function instance($$self, $$props, $$invalidate) {
     editableTask.priority = this.__value;
     $$invalidate(0, editableTask);
   }
-  function input5_input_handler() {
+  function input5_change_handler() {
+    editableTask.priority = this.__value;
+    $$invalidate(0, editableTask);
+  }
+  function input6_input_handler() {
     editableTask.dueDate = this.value;
     $$invalidate(0, editableTask);
   }
@@ -7201,7 +7240,8 @@ function instance($$self, $$props, $$invalidate) {
     input2_change_handler,
     input3_change_handler,
     input4_change_handler,
-    input5_input_handler
+    input5_change_handler,
+    input6_input_handler
   ];
 }
 var EditTask = class extends SvelteComponent {
@@ -7595,7 +7635,7 @@ var Query = class {
     this._filters = [];
     this._error = void 0;
     this._sorting = [];
-    this.priorityRegexp = /^priority (is )?(above|below)? ?(low|none|medium|high)/;
+    this.priorityRegexp = /^priority (is )?(above|below)? ?(low|none|waiting|medium|high)/;
     this.noDueString = "no due date";
     this.dueRegexp = /^due (before|after|on)? ?(.*)/;
     this.doneString = "done";
@@ -7723,6 +7763,9 @@ var Query = class {
           break;
         case "high":
           filterPriority = Priority.High;
+          break;
+        case "waiting":
+          filterPriority = Priority.Waiting;
           break;
       }
       if (filterPriority === null) {
@@ -8088,6 +8131,7 @@ var QueryRenderChild = class extends import_obsidian7.MarkdownRenderChild {
         }
         this.addChangePriorityButton(postInfo, task);
         this.addChangePriorityButton(postInfo, task, false);
+        this.addChangeWaitingButton(postInfo, task);
         taskList.appendChild(listItem);
       }
       return { taskList, tasksCount };
@@ -8134,6 +8178,28 @@ var QueryRenderChild = class extends import_obsidian7.MarkdownRenderChild {
           break;
         default:
           parsedPriority = Priority.None;
+      }
+      const updatedTask = new Task(__spreadProps(__spreadValues({}, task), {
+        priority: parsedPriority
+      }));
+      replaceTaskWithTasks({
+        originalTask: task,
+        newTasks: [updatedTask]
+      });
+    });
+  }
+  addChangeWaitingButton(postInfo, task) {
+    const changePriority = postInfo.createEl("a");
+    changePriority.setText("\u{1F504}");
+    changePriority.onClickEvent((event) => {
+      event.preventDefault();
+      let parsedPriority;
+      switch (task.priority) {
+        case "5":
+          parsedPriority = Priority.High;
+          break;
+        default:
+          parsedPriority = Priority.Waiting;
       }
       const updatedTask = new Task(__spreadProps(__spreadValues({}, task), {
         priority: parsedPriority

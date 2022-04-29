@@ -22,7 +22,7 @@ export class Query {
     private _sorting: Sorting[] = [];
 
     private readonly priorityRegexp =
-        /^priority (is )?(above|below)? ?(low|none|medium|high)/;
+        /^priority (is )?(above|below)? ?(low|none|waiting|medium|high)/;
 
     private readonly noDueString = 'no due date';
     private readonly dueRegexp = /^due (before|after|on)? ?(.*)/;
@@ -180,6 +180,9 @@ export class Query {
                     break;
                 case 'high':
                     filterPriority = Priority.High;
+                    break;
+                case 'waiting':
+                    filterPriority = Priority.Waiting;
                     break;
             }
 

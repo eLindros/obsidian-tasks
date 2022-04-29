@@ -10,7 +10,7 @@
     let descriptionInput: HTMLInputElement;
     let editableTask: {
         description: string;
-        priority: 'none' | 'low' | 'medium' | 'high';
+        priority: 'none' | 'low' | 'medium' | 'high' | 'waiting';
         dueDate: string;
     } = {
         description: '',
@@ -42,13 +42,15 @@
             .replace('  ', ' ')
             .trim();
 
-        let priority: 'none' | 'low' | 'medium' | 'high' = 'none';
+        let priority: 'none' | 'low' | 'medium' | 'high' | 'waiting' = 'none';
         if (task.priority === Priority.Low) {
             priority = 'low';
         } else if (task.priority === Priority.Medium) {
             priority = 'medium';
         } else if (task.priority === Priority.High) {
             priority = 'high';
+        } else if (task.priority === Priority.Waiting) {
+            priority = 'waiting';
         }
 
         editableTask = {
@@ -88,6 +90,9 @@
                 break;
             case 'high':
                 parsedPriority = Priority.High;
+                break;
+            case 'waiting':
+                parsedPriority = Priority.Waiting;
                 break;
             default:
                 parsedPriority = Priority.None;
@@ -135,6 +140,10 @@
             <label>
                 <input type=radio bind:group={editableTask.priority} name="Priority" value={"low"}>
                 ??
+            </label>
+            <label>
+                <input type=radio bind:group={editableTask.priority} name="Priority" value={"waiting"}>
+                >>
             </label>
         </div>
         <hr />

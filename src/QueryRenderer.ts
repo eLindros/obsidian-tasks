@@ -268,19 +268,24 @@ class QueryRenderChild extends MarkdownRenderChild {
             });
         });
     }
-    
-    private addChangeWaitingButton(
-        postInfo: HTMLSpanElement,
-        task: Task,
-    ) {
+
+    private addChangeWaitingButton(postInfo: HTMLSpanElement, task: Task) {
         const changePriority = postInfo.createEl('a');
 
-        changePriority.setText('▶️');
+        changePriority.setText('🔄');
 
         changePriority.onClickEvent((event: MouseEvent) => {
             event.preventDefault();
 
-            let parsedPriority: Priority = task.priority = '5' ? '1' : '5';
+            let parsedPriority: Priority;
+
+            switch (task.priority) {
+                case '5':
+                    parsedPriority = Priority.High;
+                    break;
+                default:
+                    parsedPriority = Priority.Waiting;
+            }
 
             const updatedTask = new Task({
                 ...task,
